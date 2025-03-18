@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextTerra - 写日记学语言</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // 配置Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+
+        // 检测系统颜色模式
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* 淡入动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 20px;
+        }
+        
+        /* 图片悬停效果 */
+        .img-hover-effect {
+            transition: transform 0.3s ease;
+        }
+        
+        .img-hover-effect:hover {
+            transform: scale(1.03);
+        }
+        
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- 顶部导航栏 -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d3/c0/69/d3c069c9-9790-07fc-1104-dfda91d489f5/AppIcon-0-0-1x_U007epad-0-1-85-220.png/460x0w.webp" alt="TextTerra Logo" class="w-8 h-8 rounded-lg">
+                    <span class="text-xl font-bold text-brand-600 dark:text-brand-400">TextTerra</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="px-3 py-2 rounded-md text-sm font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-colors">功能特点</a>
+                    <a href="#screenshots" class="px-3 py-2 rounded-md text-sm font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-colors">应用截图</a>
+                    <a href="#why" class="px-3 py-2 rounded-md text-sm font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-colors">为什么选择</a>
+                    <a href="#contact" class="px-3 py-2 rounded-md text-sm font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-colors">联系我</a>
+                    <button id="theme-toggle" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <!-- 英雄区域 -->
+        <section class="pt-20 pb-24 px-4 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="w-full lg:w-1/2 mb-10 lg:mb-0">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">通过写日记<br><span class="text-brand-600 dark:text-brand-400">学习新语言</span></h1>
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-lg">
+                            TextTerra将语言学习转变为个性化旅程，让您通过写日记来提升语言能力，并获得AI驱动的智能反馈。
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#features" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg inline-flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                了解更多
+                            </a>
+                            <a href="https://apps.apple.com/app/textterra/id6738687857" target="_blank" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg inline-flex items-center">
+                                <i class="fab fa-apple mr-2"></i>
+                                立即下载
+                            </a>
+                        </div>
+                    </div>
+                    <!-- <div class="w-full lg:w-1/2 flex justify-center">
+                        <div class="relative w-64 h-96">
+                            <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5b/f3/71/5bf37114-c985-1c3b-9619-f0232882aab4/1.png/460x0w.webp" alt="TextTerra App" class="absolute rounded-2xl shadow-2xl transform -rotate-2 scale-90 z-10 img-hover-effect">
+                            <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d7/37/c0/d737c0ff-7c0e-4645-7428-be57e9c7981d/2.png/460x0w.webp" alt="TextTerra App" class="absolute rounded-2xl shadow-2xl transform rotate-2 z-20 img-hover-effect">
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用介绍区域 -->
+        <section class="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-6">语言学习的沉浸式体验</h2>
+                <p class="text-lg text-gray-700 dark:text-gray-300 mb-8">
+                    学习新语言可能充满挑战，但有了TextTerra，这将变成一种沉浸式且愉快的体验！我们的应用通过允许您用正在学习的语言撰写日记，将语言学习转变为个性化旅程。当您表达自己时，TextTerra提供强大的AI驱动反馈，帮助您在每一步都有所提高。
+                </p>
+            </div>
+        </section>
+
+        <!-- 功能特点区域 -->
+        <section id="features" class="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold mb-16 text-center">核心功能</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 功能卡片1 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-pencil-alt text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">用目标语言写作</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            无论您是初学者还是高级学习者，撰写几句话或完整的日记都是练习语言技能的有趣且有效的方式。
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片2 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-robot text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">AI驱动错误纠正</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            TextTerra智能分析您的写作并突出显示错误，提供有用的纠正建议，以改进您的语法、词汇和句子结构。
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片3 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-language text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">母语者版本</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            查看母语使用者如何表达您的文本，并与您的版本进行比较。这有助于您了解更自然、更流畅的表达方式。
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片4 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-key text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">关键学习点</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            除了纠正外，我们还提供针对您写作的关键语法提示和语言见解。这些小贴士帮助您理解错误并避免未来重复犯错。
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片5 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-chart-line text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">追踪您的进步</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            随着您每天记录日记，观察您的语言技能如何提高。跟踪您的错误并从中学习。每一条记录都成为您学习旅程中向前迈出的一步。
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片6 -->
+                    <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md card-hover fade-in">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-globe text-xl text-brand-600 dark:text-brand-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">多语言支持</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            无论您正在学习英语、西班牙语、法语、中文或任何其他语言，TextTerra都设计为支持广泛的语言，使其成为全球学习者的通用工具。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 屏幕截图区域 -->
+        <section id="screenshots" class="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold mb-16 text-center">应用截图</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="overflow-hidden rounded-xl shadow-lg fade-in">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5b/f3/71/5bf37114-c985-1c3b-9619-f0232882aab4/1.png/460x0w.webp" alt="TextTerra 截图1" class="w-full h-auto img-hover-effect">
+                    </div>
+                    <div class="overflow-hidden rounded-xl shadow-lg fade-in">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d7/37/c0/d737c0ff-7c0e-4645-7428-be57e9c7981d/2.png/460x0w.webp" alt="TextTerra 截图2" class="w-full h-auto img-hover-effect">
+                    </div>
+                    <div class="overflow-hidden rounded-xl shadow-lg fade-in">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c9/d0/94/c9d09424-e62b-c149-1704-5197fbe9b2f9/3.png/460x0w.webp" alt="TextTerra 截图3" class="w-full h-auto img-hover-effect">
+                    </div>
+                    <div class="overflow-hidden rounded-xl shadow-lg fade-in">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/87/ce/5c/87ce5cc5-ab7e-51fb-9d12-c567abb6e26b/4.png/460x0w.webp" alt="TextTerra 截图4" class="w-full h-auto img-hover-effect">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 为什么选择我们区域 -->
+        <section id="why" class="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold mb-16 text-center">为什么选择 TextTerra？</h2>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-xl fade-in">
+                    <p class="text-gray-700 dark:text-gray-300 mb-6">
+                        传统的语言学习方法通常感觉僵硬且进展缓慢，但TextTerra能适应您的需求。它提供个性化的实时反馈，就像在指尖拥有自己的语言导师一样。凭借其母语者的见解和关键学习笔记，TextTerra不只是纠正您的错误—它帮助您在更深层次上理解语言。
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 mb-6">
+                        通过定期写作并接收纠正，您将自然地提高语言技能，而不会有正式课程的压力。应用的AI随着时间变得更智能，适应您的写作风格并以最有效的方式帮助您学习。
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        无论您是为了旅行、工作还是个人提升而学习语言，TextTerra都是您的首选语言伙伴。
+                    </p>
+                </div>
+                
+                <div class="mt-16 text-center fade-in">
+                    <h3 class="text-2xl font-bold mb-6">开始写作，开始学习</h3>
+                    <a href="https://apps.apple.com/app/textterra/id6738687857" target="_blank" class="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-300 shadow-lg hover:shadow-xl inline-flex items-center">
+                        <i class="fab fa-apple mr-2"></i>
+                        立即下载 TextTerra
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系区域 -->
+        <section id="contact" class="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold mb-16 text-center">联系我</h2>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <a href="https://x.com/leetaogoooo" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md flex flex-col items-center text-center card-hover fade-in">
+                        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mb-4">
+                            <i class="fab fa-twitter text-xl text-gray-800 dark:text-gray-200"></i>
+                        </div>
+                        <h3 class="font-medium mb-2">Twitter/X</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">@leetaogoooo</p>
+                    </a>
+                    
+                    <a href="https://github.com/LeetaoGoooo" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md flex flex-col items-center text-center card-hover fade-in">
+                        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mb-4">
+                            <i class="fab fa-github text-xl text-gray-800 dark:text-gray-200"></i>
+                        </div>
+                        <h3 class="font-medium mb-2">GitHub</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">LeetaoGoooo</p>
+                    </a>
+                    
+                    <a href="https://www.xiaohongshu.com/user/profile/5a0c44aadb2e6068f2bbb872" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md flex flex-col items-center text-center card-hover fade-in">
+                        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-book-open text-xl text-gray-800 dark:text-gray-200"></i>
+                        </div>
+                        <h3 class="font-medium mb-2">小红书</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Leetao</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚区域 -->
+    <footer class="py-8 px-4 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d3/c0/69/d3c069c9-9790-07fc-1104-dfda91d489f5/AppIcon-0-0-1x_U007epad-0-1-85-220.png/460x0w.webp" alt="TextTerra Logo" class="w-8 h-8 rounded-lg mr-2">
+                    <span class="text-lg font-semibold text-gray-800 dark:text-gray-200">TextTerra</span>
+                </div>
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">
+                        © 2025 TextTerra. 作者: <span class="font-medium">Leetao</span>
+                    </p>
+                </div>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="https://x.com/leetaogoooo" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="https://github.com/LeetaoGoooo" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://www.xiaohongshu.com/user/profile/5a0c44aadb2e6068f2bbb872" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fas fa-book-open text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 主题切换
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+        
+        // 滚动动画
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>

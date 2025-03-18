@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闪耀 - 心情追踪应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 添加 Tailwind 暗黑模式配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        // 检查系统偏好并设置初始主题
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // 主题切换功能
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+        
+        // 监听系统主题变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (e.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+    <style>
+        /* 自定义滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(156, 163, 175, 0.8);
+        }
+        
+        /* 自定义动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        
+        /* 图片悬停效果 */
+        .screenshot-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .screenshot-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 懒加载淡入效果 */
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .lazy-load.loaded {
+            opacity: 1;
+        }
+        
+        /* 导航栏固定效果 */
+        .navbar-fixed {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased transition-colors duration-300">
+    <!-- 导航栏 -->
+    <header class="fixed w-full bg-white/80 dark:bg-gray-900/80 navbar-fixed z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-4 md:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ac/a7/10/aca7107d-3364-b612-3fc8-e8d4699e1f1d/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.webp" alt="闪耀图标" class="w-8 h-8 rounded-lg">
+                    <h1 class="text-xl font-bold tracking-tight text-purple-600 dark:text-purple-400">Glittering</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="hidden md:block px-3 py-2 rounded-md text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors">功能特点</a>
+                    <a href="#screenshots" class="hidden md:block px-3 py-2 rounded-md text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors">应用截图</a>
+                    <a href="#cta" class="hidden md:block px-3 py-2 rounded-md text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors">立即体验</a>
+                    <a href="https://apps.apple.com/app/glittering/id6502569529" target="_blank" class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition transform hover:scale-105 duration-200 font-medium">
+                        <i class="fa-solid fa-download"></i>
+                        <span>立即下载</span>
+                    </a>
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="pt-20 pb-16">
+        <!-- 英雄区块 -->
+        <section class="container mx-auto px-4 md:px-6 py-16 md:py-24">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <div class="lg:w-1/2 fade-in opacity-0">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">探索自我</span>
+                        <br>记录心情点滴
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-2xl">
+                        闪耀是一款精心设计的心情追踪应用，帮助您深入了解自己的情绪旅程，通过直观界面轻松记录每日心情、想法和体验。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://apps.apple.com/app/glittering/id6502569529" target="_blank" class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition transform hover:scale-105 duration-200 font-medium">
+                            <i class="fa-brands fa-apple mr-2 text-xl"></i>
+                            <span>App Store 下载</span>
+                        </a>
+                        <a href="#features" class="flex items-center justify-center bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-lg transition duration-200">
+                            <span>了解更多</span>
+                            <i class="fa-solid fa-arrow-down ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- <div class="lg:w-1/2 mt-12 lg:mt-0 flex justify-center fade-in opacity-0 delay-200">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30 blur-3xl rounded-full"></div>
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/10/d7/ca/10d7ca73-2709-bf0c-30c3-b3c618b81080/0643b9df-66bc-46d0-b8e2-e06577d941b1_1.png/460x0w.webp" alt="闪耀应用界面" class="rounded-2xl shadow-xl relative z-10 max-w-xs md:max-w-sm lg:max-w-md">
+                    </div>
+                </div> -->
+            </div>
+        </section>
+
+        <!-- 特性模块 -->
+        <section id="features" class="bg-white dark:bg-gray-800 py-16 md:py-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="text-center mb-16 fade-in opacity-0">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">为什么选择闪耀</h2>
+                    <p class="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+                        精心打造的功能，帮助您获得深刻自我认知，培养情绪智能
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 特性卡片 1 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-100">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 mb-6">
+                            <i class="fa-solid fa-chart-line text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">直观数据可视化</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            通过精美图表清晰展示您的情绪变化趋势，帮助识别模式和触发因素。
+                        </p>
+                    </div>
+                    
+                    <!-- 特性卡片 2 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-200">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300 mb-6">
+                            <i class="fa-solid fa-lightbulb text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">个性化洞察</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            获取关于您情绪状态的个性化分析和建议，培养自我意识和情绪智能。
+                        </p>
+                    </div>
+                    
+                    <!-- 特性卡片 3 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-300">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 mb-6">
+                            <i class="fa-solid fa-lock text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">隐私保护</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            您的情绪数据安全加密存储，确保您的个人情感旅程完全私密。
+                        </p>
+                    </div>
+                    
+                    <!-- 特性卡片 4 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-100">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 mb-6">
+                            <i class="fa-solid fa-calendar-day text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">每日提醒</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            设置个性化提醒，养成记录情绪的习惯，确保持续追踪您的心理健康。
+                        </p>
+                    </div>
+                    
+                    <!-- 特性卡片 5 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-200">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 mb-6">
+                            <i class="fa-solid fa-pen text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">日记功能</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            记录与情绪相关的想法、事件和经历，创建完整的情感档案。
+                        </p>
+                    </div>
+                    
+                    <!-- 特性卡片 6 -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300 fade-in opacity-0 delay-300">
+                        <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 mb-6">
+                            <i class="fa-solid fa-palette text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">优雅设计</h3>
+                        <p class="text-gray-700 dark:text-gray-300"></p>
+                            精心设计的直观界面，美观且易用，让记录心情成为愉悦的体验。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用截图区域 -->
+        <section id="screenshots" class="py-16 md:py-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="text-center mb-16 fade-in opacity-0">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">应用界面展示</h2>
+                    <p class="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+                        直观美观的界面设计，让追踪心情变得简单愉悦
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-in opacity-0 delay-200">
+                    <div class="lazy-load rounded-xl overflow-hidden shadow-md">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/10/d7/ca/10d7ca73-2709-bf0c-30c3-b3c618b81080/0643b9df-66bc-46d0-b8e2-e06577d941b1_1.png/460x0w.webp" alt="应用截图1" class="w-full h-auto screenshot-hover">
+                    </div>
+                    <div class="lazy-load rounded-xl overflow-hidden shadow-md">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ea/56/0e/ea560e65-2061-5cf0-ab2d-f12e6b82e60a/2bb85fa8-3bbb-4d8b-91c0-a16b09a9e8e0_2.png/460x0w.webp" alt="应用截图2" class="w-full h-auto screenshot-hover">
+                    </div>
+                    <div class="lazy-load rounded-xl overflow-hidden shadow-md">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a5/ec/ac/a5ecacea-4d8a-167e-46c5-012d45f271bd/0181ac2f-51be-4644-87ca-2ad31bd7d396_4.png/460x0w.webp" alt="应用截图3" class="w-full h-auto screenshot-hover">
+                    </div>
+                    <div class="lazy-load rounded-xl overflow-hidden shadow-md">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ec/7b/ef/ec7bef44-6840-ae4c-2369-8b39be8a9100/e19db113-61c2-4907-8085-d4317806c300_3.png/460x0w.webp" alt="应用截图4" class="w-full h-auto screenshot-hover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 号召行动区域 -->
+        <section id="cta" class="bg-gradient-to-br from-purple-600 to-pink-500 text-white py-16 md:py-20">
+            <div class="container mx-auto px-4 md:px-6 text-center fade-in opacity-0">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">开启您的情绪探索之旅</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90">
+                    通过闪耀应用，开始了解自己的情绪模式，培养自我意识，提升心理健康水平。
+                </p>
+                <div class="inline-block">
+                    <a href="https://apps.apple.com/app/glittering/id6502569529" target="_blank" class="flex items-center space-x-3 bg-white text-purple-600 font-medium px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition transform hover:scale-105 duration-300">
+                        <i class="fa-brands fa-apple text-2xl"></i>
+                        <div class="text-left">
+                            <div class="text-xs">下载</div>
+                            <div class="text-lg font-semibold">App Store</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部区域 -->
+    <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 md:px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ac/a7/10/aca7107d-3364-b612-3fc8-e8d4699e1f1d/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.webp" alt="闪耀图标" class="w-8 h-8 rounded-lg">
+                        <h2 class="text-xl font-bold">闪耀</h2>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm max-w-md">
+                        精心设计的心情追踪应用，帮助您深入了解自己的情绪旅程
+                    </p>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-3">作者信息</h3>
+                        <div class="text-gray-600 dark:text-gray-400">
+                            <p>作者：Leetao</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="https://x.com/leetaogoooo" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition duration-200">
+                            <i class="fa-brands fa-x-twitter text-xl"></i>
+                        </a>
+                        <a href="https://github.com/LeetaoGoooo" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition duration-200">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <a href="https://www.xiaohongshu.com/user/profile/5a0c44aadb2e6068f2bbb872" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition duration-200">
+                            <i class="fa-solid fa-book text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                <p>© 2025 闪耀 (Glittering) - 所有权利保留</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 淡入动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // 图片懒加载
+            const lazyLoadImages = document.querySelectorAll('.lazy-load');
+            
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('loaded');
+                        imageObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            lazyLoadImages.forEach(image => {
+                imageObserver.observe(image);
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.querySelector('header');
+            let lastScrollTop = 0;
+            
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+                
+                if (scrollTop > 50) {
+                    navbar.classList.add('shadow-md');
+                } else {
+                    navbar.classList.remove('shadow-md');
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 显示下载按钮
+            const downloadBtn = document.getElementById('download-btn');
+            if (downloadBtn) {
+                setTimeout(() => {
+                    downloadBtn.classList.remove('hidden');
+                    downloadBtn.classList.add('flex');
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

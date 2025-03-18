@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceBox - 离线语音转文字神器</title>
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义样式 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.7s ease-in-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 卡片悬停效果 */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        .dark .feature-card:hover {
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 按钮悬停效果 */
+        .hover-btn {
+            transition: all 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 图片悬停效果 */
+        .app-screen {
+            transition: all 0.3s ease;
+        }
+        .app-screen:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .dark .app-screen:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 淡入动画 */
+        .animate-on-scroll {
+            opacity: 0;
+        }
+        .animated {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800 bg-gray-50 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/31/88/fa/3188fa80-e1e2-0461-9537-5d0bc03ce36b/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/460x0w.webp" alt="VoiceBox Logo" class="w-8 h-8 rounded-lg">
+                    <span class="text-xl font-bold text-primary-600 dark:text-primary-400">VoiceBox</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">功能特点</a>
+                    <a href="#screens" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">应用截图</a>
+                    <a href="#features" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">为什么选择</a>
+                    <button id="theme-toggle" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200">
+                        <i class="fa-solid fa-sun hidden dark:block"></i>
+                        <i class="fa-solid fa-moon block dark:hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区 -->
+    <section class="py-12 sm:py-16 md:py-20 animate-fade-in">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight animate-slide-up">
+                        离线语音转文字<br>
+                        <span class="text-primary-600 dark:text-primary-400">前所未有的体验</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-lg animate-slide-up" style="animation-delay: 0.2s">
+                        VoiceBox 采用领先的开源语音识别模型，提供离线高准确度的语音转文字服务，让您随时随地记录想法，不受网络限制。
+                    </p>
+                    <div class="flex flex-wrap gap-3 animate-slide-up" style="animation-delay: 0.4s">
+                        <a href="https://apps.apple.com/app/voicebox/id6465250245" target="_blank" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center hover-btn">
+                            <i class="fab fa-apple mr-2"></i>
+                            立即下载
+                        </a>
+                        <a href="#features" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 font-medium rounded-lg hover-btn transition-all duration-300">
+                            了解更多
+                        </a>
+                    </div>
+                </div>
+                <!-- <div class="w-full md:w-1/2 flex justify-center">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/cc/c1/ae/ccc1aeb3-edb4-ae4b-3318-4f2f75eca2f9/129f93c0-52a9-4392-a893-fb20bdb72666_1.png/460x0w.webp" alt="VoiceBox 主界面" class="w-3/4 max-w-xs rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 app-screen">
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特点 -->
+    <section id="features" class="py-16 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 animate-on-scroll">核心功能特点</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- 功能卡片 1 -->
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-microphone text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">一键转换</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        支持直接语音识别或上传预先录制的音频，一键转换为文本。快速将会议录音、口头笔记转为文字。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 2 -->
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-wifi-slash text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">完全离线</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        采用领先的开源语音识别模型Whisper，实现离线语音转文字。无需互联网连接，转录仍然非常流畅。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 3 -->
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-bullseye text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">出色准确性</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        语音识别具有出色的准确性，可与在线API相媲美。不断增加更多的语言以扩大覆盖范围。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 4 -->
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-code-branch text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">持续优化</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        作为一个开源模型，Whisper不断进行优化和改进。VoiceBox将持续更新，带来更好的用户体验。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 应用截图 -->
+    <section id="screens" class="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 animate-on-scroll">应用截图</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div class="animate-on-scroll">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/cc/c1/ae/ccc1aeb3-edb4-ae4b-3318-4f2f75eca2f9/129f93c0-52a9-4392-a893-fb20bdb72666_1.png/460x0w.webp" alt="VoiceBox 截图1" class="w-full rounded-xl shadow-md border border-gray-200 dark:border-gray-700 app-screen">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.15s">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/51/65/52/516552ac-0a59-28ad-fec2-1f3770459e0b/92f372ef-8b06-4eae-8d35-733707bed8b3_2.png/460x0w.webp" alt="VoiceBox 截图2" class="w-full rounded-xl shadow-md border border-gray-200 dark:border-gray-700 app-screen">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.3s">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/bd/59/dc/bd59dc28-de01-c5af-162d-12b16ba306a1/9b687572-1080-4d2c-b944-8027af0c87f5_3.png/460x0w.webp" alt="VoiceBox 截图3" class="w-full rounded-xl shadow-md border border-gray-200 dark:border-gray-700 app-screen">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.45s">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/b0/41/60/b041602b-9b98-45c4-bb41-b4b5e73c9951/e8d72739-bae3-46a7-b125-719b5b1580fa_4.png/460x0w.webp" alt="VoiceBox 截图4" class="w-full rounded-xl shadow-md border border-gray-200 dark:border-gray-700 app-screen">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 评测与推荐 -->
+    <section class="py-16 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 animate-on-scroll">为什么选择 VoiceBox?</h2>
+            <div class="bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-xl fade-in">
+                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                    这是一个非常实用的语音助手工具，提供可靠的离线高准确度语音转文字，适用范围广泛。如果您需要一个用于语音转文字的应用程序，这绝对是一个顶级选择，因其离线功能和出色的识别效果而脱颖而出。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用场景 -->
+    <section class="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 animate-on-scroll">应用场景</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- 场景卡片 1 -->
+                <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-briefcase text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">商务会议</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        会议记录无需专人负责，轻松将讨论内容转为文字记录，方便后续整理和分享。
+                    </p>
+                </div>
+                
+                <!-- 场景卡片 2 -->
+                <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">学习笔记</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        课堂录音快速转为文字笔记，帮助学生更高效地整理和复习学习内容。
+                    </p>
+                </div>
+                
+                <!-- 场景卡片 3 -->
+                <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 animate-on-scroll">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fa-solid fa-lightbulb text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">灵感捕捉</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        随时记录灵感和想法，即使在没有网络的环境中也能准确地将语音转为文字。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 行动召唤 -->
+    <section class="py-16 bg-primary-600 dark:bg-primary-800 text-white transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center animate-on-scroll">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6">立即体验 VoiceBox</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto opacity-90">
+                告别繁琐的文字输入，让VoiceBox帮您轻松将语音转为文字。无需网络连接，随时随地高效工作。
+            </p>
+            <a href="https://apps.apple.com/app/voicebox/id6465250245" class="px-8 py-4 bg-white text-primary-700 hover:bg-gray-100 font-medium rounded-lg inline-flex items-center hover-btn transition-all duration-300">
+                <i class="fa-solid fa-download mr-2"></i>
+                立即下载
+            </a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/31/88/fa/3188fa80-e1e2-0461-9537-5d0bc03ce36b/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/460x0w.webp" alt="VoiceBox Logo" class="w-8 h-8 rounded-lg">
+                        <span class="text-lg font-bold">VoiceBox</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        离线语音转文字神器
+                    </p>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-end">
+                    <div class="flex space-x-4 mb-4">
+                        <a href="https://x.com/leetaogoooo" target="_blank" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                            <i class="fa-brands fa-twitter text-xl"></i>
+                        </a>
+                        <a href="https://github.com/LeetaoGoooo" target="_blank" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <a href="https://www.xiaohongshu.com/user/profile/5a0c44aadb2e6068f2bbb872" target="_blank" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                            <i class="fa-solid fa-heart text-xl"></i>
+                        </a>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        设计与开发 by <a href="#" class="text-primary-600 dark:text-primary-400 font-medium">Leetao</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 深色模式切换
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // 检查系统偏好和本地存储
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+        
+        // 滚动动画
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementBottom = element.getBoundingClientRect().bottom;
+                
+                if (elementTop < window.innerHeight - 100 && elementBottom > 0) {
+                    element.classList.add('animated');
+                }
+            });
+        };
+        
+        // 初始化动画
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('resize', animateOnScroll);
+        
+        // 触发一次初始动画
+        setTimeout(animateOnScroll, 100);
+    </script>
+</body>
+</html>
