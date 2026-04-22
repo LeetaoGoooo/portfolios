@@ -31,12 +31,16 @@
             'apps.title': '作品',
             'apps.onStore': 'App Store',
             'apps.github': 'GitHub',
+            'apps.website': '官网',
             'about.title': '关于我',
             'about.p1': '我是一名独立开发者，热爱用代码创造有价值的产品。',
             'about.p2': '擅长 Swift/SwiftUI、Flutter、React，也写 Python/Go/Java。喜欢探索 AI 与移动端的结合，追求简洁实用的产品设计。',
             'contact.title': '联系我',
             'contact.desc': '如果你对我的作品感兴趣，欢迎联系。',
             'footer.rights': '保留所有权利。',
+            'app.lightyou.name': 'LightYou',
+            'app.lightyou.desc': 'AI 加持的深度阅读圣地。本地优先，跨 macOS / Windows / Linux / iOS，通过自己的 WebDAV 同步，端侧语义搜索把你读过的一切串起来。',
+            'app.lightyou.tag': '桌面 · 阅读',
             'app.stars.name': '星光',
             'app.stars.desc': '极简私密日记应用，每一篇日记都是你的星星。支持星空动态、写作打卡、锁屏快捷入口、桌面小组件。',
             'app.stars.tag': '日记 · 习惯',
@@ -63,12 +67,16 @@
             'apps.title': 'Apps',
             'apps.onStore': 'App Store',
             'apps.github': 'GitHub',
+            'apps.website': 'Website',
             'about.title': 'About',
             'about.p1': "I'm an indie developer who loves creating valuable products with code.",
             'about.p2': 'Proficient in Swift/SwiftUI, Flutter, React, and also work with Python/Go/Java. Passionate about combining AI with mobile development, pursuing simple and practical product design.',
             'contact.title': 'Contact',
             'contact.desc': "Interested in my work? Let's connect.",
             'footer.rights': 'All rights reserved.',
+            'app.lightyou.name': 'LightYou',
+            'app.lightyou.desc': 'An AI-enhanced sanctuary for deep reading. Local-first, cross-platform (macOS / Windows / Linux / iOS), syncs through your own WebDAV, and connects everything you read via on-device semantic search.',
+            'app.lightyou.tag': 'Desktop · Reading',
             'app.stars.name': 'Stars',
             'app.stars.desc': 'A minimal, private journaling app. Every entry is a star in your sky. Dynamic starfield, writing streaks, lock screen widget.',
             'app.stars.tag': 'Journal · Habits',
@@ -282,6 +290,32 @@
             <div class="max-w-3xl mx-auto">
                 <h2 class="text-2xl font-bold mb-10 reveal" data-i="apps.title">作品</h2>
                 <div class="grid gap-5">
+
+                    <!-- LightYou -->
+                    <div class="liquid-glass liquid-card rounded-2xl p-6 reveal">
+                        <div class="flex items-start gap-5">
+                            <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/6c/bf/17/6cbf17af-eff5-5eca-687e-22cfe2440ebb/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg" alt="LightYou" class="w-16 h-16 rounded-[18px] app-icon flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-1.5">
+                                    <h3 class="text-lg font-semibold" data-i="app.lightyou.name">LightYou</h3>
+                                    <span class="text-xs text-zinc-400 dark:text-zinc-500 font-medium" data-i="app.lightyou.tag">桌面 · 阅读</span>
+                                </div>
+                                <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4" data-i="app.lightyou.desc">
+                                    AI 加持的深度阅读圣地。本地优先，跨 macOS / Windows / Linux / iOS，通过自己的 WebDAV 同步，端侧语义搜索把你读过的一切串起来。
+                                </p>
+                                <div class="flex items-center gap-3">
+                                    <a href="https://lightyou.pages.dev" target="_blank" rel="noopener noreferrer" class="liquid-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium">
+                                        <i class="fa-solid fa-globe text-sm"></i>
+                                        <span data-i="apps.website">官网</span>
+                                    </a>
+                                    <a href="https://apps.apple.com/us/app/lightyou/id6761893930" target="_blank" rel="noopener noreferrer" class="liquid-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium">
+                                        <i class="fab fa-apple text-sm"></i>
+                                        <span data-i="apps.onStore">App Store</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Stars -->
                     <div class="liquid-glass liquid-card rounded-2xl p-6 reveal">
